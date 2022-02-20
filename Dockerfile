@@ -21,7 +21,7 @@ ADD    ./scripts/start /start
 
 
 # Download and install everything from the repos.
-RUN    apt-get -q -y update; apt-get -q -y upgrade && \
+RUN    apt-get -q -y update; apt-get -q -y dist-upgrade && \
        apt-get -q -y install sudo openssh-server && \
        mkdir /var/run/sshd
 
@@ -54,3 +54,6 @@ RUN    chmod +x /start
 
 # Starting sshd
 CMD    ["/start"]
+
+# clean up apt cache
+RUN rm -rf /var/lib/apt/lists/*
