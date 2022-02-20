@@ -1,14 +1,14 @@
 # -----------------------------------------------------------------------------
-# This is base image of Ubuntu LTS with SSHD service.
+# This is base image of Ubuntu Rolling with SSHD service.
 #
-# Authors: Art567
+# Authors: Art567, fexofenadine
 # Updated: Sep 20th, 2015
 # Require: Docker (http://www.docker.io/)
 # -----------------------------------------------------------------------------
 
 
-# Base system is the latest LTS version of Ubuntu.
-from   ubuntu
+# Base system is the latest rolling version of Ubuntu.
+from   ubuntu:rolling
 
 
 # Make sure we don't get notifications we can't answer during building.
@@ -29,7 +29,7 @@ run    apt-get -q -y update; apt-get -q -y upgrade && \
 run    echo 'root:password' >> /root/passwdfile
 
 
-# Create user and it's password
+# Create user and its password
 run    useradd -m -G sudo master && \
        echo 'master:password' >> /root/passwdfile
 
