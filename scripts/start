@@ -2,9 +2,26 @@
 # -----------------------------------------------------------------------------
 # docker-ubuntu-sshd /start script
 #
-# Authors: Art567
-# Updated: Sep 20th, 2015
+# Authors: Art567, fexofenadine
+# Updated: 21st Feb 2021
 # -----------------------------------------------------------------------------
+
+
+# create/recreate home folder in case of external mount
+mkdir /home/master
+sudo chown master:users /home/master
+
+
+# create new ssh server host keys on first boot
+FILE=/data/.ssh/keys_recreated
+if test -f "$FILE"; then
+    echo "ssh keys previously recreated"
+else
+	echo "ssh keys are defaults, recreating"
+	rm -v /etc/ssh/ssh_host_*
+	dpkg-reconfigure openssh-server
+	touch /data/.ssh/keys_recreated
+fi
 
 
 # Run OpenSSH server in daemon mode

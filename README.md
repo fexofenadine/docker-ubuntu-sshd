@@ -27,12 +27,12 @@ Instructions
  
  - Build the container:
  
-   `$ sudo docker build -t fexofenadine/ubuntu .`
+   `$ sudo docker build -t fexofenadine/ubuntu-sshd .`
  
  
  - Run the container:
  
-   `$ sudo docker run -d=true --name=ubuntu --restart=always -p=2222:22 -v=/opt/data:/data fexofenadine/ubuntu /start`
+   `$ sudo docker run -d=true --name=ubuntu --restart=always -p=2222:22 -v=/opt/data:/data fexofenadine/ubuntu-sshd /start`
  
  
  - Your container will start and bind ssh to 2222 port.

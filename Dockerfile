@@ -51,9 +51,13 @@ VOLUME ["/data"]
 # Fix all permissions
 RUN    chmod +x /start
 
+# Set default shell to bash
+RUN    chsh -s /bin/bash master
+
+# clean up apt cache
+RUN    rm -rf /var/lib/apt/lists/*
 
 # Starting sshd
 CMD    ["/start"]
 
-# clean up apt cache
-RUN rm -rf /var/lib/apt/lists/*
+
