@@ -16,6 +16,8 @@ if test ! -d /home/${USERNAME}; then
 fi
 echo setting ownership of /home/${USERNAME} to ${USERNAME}
 chown -R ${USERNAME}:users /home/${USERNAME}
+echo setting 775 perms on /home
+chmod 775 -R /home
 
 
 # create new ssh server host keys on first boot
