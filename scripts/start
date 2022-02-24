@@ -3,15 +3,11 @@
 # docker-ubuntu-sshd /start script
 #
 # Authors: Art567, fexofenadine
-# Updated: 21st Feb 2021
+# Updated: 24th Feb 2021
 # -----------------------------------------------------------------------------
-USERNAME='%USERNAME%'
-echo username set to $USERNAME at image buildtime
-if [[ $USERNAME == "" ]]; then
-	USERNAME='master'
-fi
-echo username set to $USERNAME at runtime
 
+USERNAME='%USERNAME%'
+echo username was set to $USERNAME at image buildtime
 
 # create/recreate home folder in case of external mount
 if test ! -d /home/${USERNAME}; then
@@ -20,6 +16,7 @@ if test ! -d /home/${USERNAME}; then
 fi
 echo setting ownership of /home/${USERNAME} to ${USERNAME}
 chown -R ${USERNAME}:users /home/${USERNAME}
+
 
 # create new ssh server host keys on first boot
 FILE="/root/host_keys_recreated"
@@ -33,8 +30,6 @@ else
 	touch $FILE
 fi
 
-# run plextraktsync in scrobble mode
-# plextraktsync watch
 
 # Run OpenSSH server in daemon mode
 echo starting sshd daemon

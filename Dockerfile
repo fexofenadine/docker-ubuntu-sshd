@@ -2,7 +2,7 @@
 # This is base image of Ubuntu Rolling with SSHD service.
 #
 # Authors: Art567, fexofenadine
-# Updated: 21st Feb 2022
+# Updated: 24th Feb 2022
 # Require: Docker (http://www.docker.io/)
 # -----------------------------------------------------------------------------
 
@@ -51,4 +51,4 @@ RUN    chsh -s /bin/bash ${USERNAME}
 #RUN    dpkg-reconfigure debconf --frontend=teletype
 
 # Starting sshd
-CMD    ["/start ${USERNAME}"]
+CMD    ["/start"]

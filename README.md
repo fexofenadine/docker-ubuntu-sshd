@@ -1,7 +1,7 @@
-Ubuntu LTS with SSH (Docker)
+Ubuntu Rolling with SSH (Docker)
 =========
 
-A Docker file to build a [docker.io] base container with Ubuntu LTS and a sshd service
+A Docker file to build a [docker.io] base container with Ubuntu Rolling and a sshd service
 [docker.io]: http://docker.io
 Nice and easy way to get any server up and running using docker
 
@@ -14,25 +14,30 @@ Instructions
  
  - Clone this repository:
  
-   `$ git clone https://github.com/art567/docker-ubuntu-sshd.git`
+   `$ git clone https://github.com/fexofenadine/docker-ubuntu-sshd.git`
  
  
  - Enter local directory:
  
    `$ cd docker-ubuntu-sshd`
  
- - Change passwords in Dockerfile:
  
-   `$ vi Dockerfile`
+ - Build the container, specifying username and password as --build-arg(s) as required. If user/pass combo is not passed, it will be set to the default (master:password):
  
- - Build the container:
+   `$ sudo docker -t fexofenadine/ubuntu .`
  
-   `$ sudo docker build -t art567/ubuntu .`
  
+ - You can specify username and password as build arguments as required. If user/pass combo is not passed, it will be set to the default (master:password):
+ 
+   `$ sudo docker --build-arg USERNAME=fexofenadine --build-arg PASSWORD=mypassword -t fexofenadine/ubuntu .`
+  
  
  - Run the container:
  
-   `$ sudo docker run -d=true --name=ubuntu --restart=always -p=2222:22 -v=/opt/data:/data art567/ubuntu /start`
+   `$ sudo docker run -d=true --name=ubuntu --restart=always -p=2222:22 fexofenadine/ubuntu /start`
+ 
+ 
+ - Consider binding your /home directory as a volume for persistent user customizations
  
  
  - Your container will start and bind ssh to 2222 port.
@@ -50,23 +55,18 @@ Instructions
  
  - If you don't want to deal with root:
  
-   `$ ssh master@<ip-address> -p 2222`
+   `$ ssh user@<ip-address> -p 2222`
  
 
 **VERY IMPORTANT!!!**
 -----------
 
- **Don't forget to change passwords in Dockerfile before building image!**
+ **Don't forget to change passwords in the arguments of your build command before building image!**
 
 
 Versions
 -----------
 Some branches represents Ubuntu versions.
 
-Branch `master` is always represented by latest Ubuntu LTS
-
-   For example:
-   - 12.04 - Ubuntu 12.04 LTS
-   - 14.04 - Ubuntu 14.04 LTS
-   - 16.04 - Ubuntu 16.04 LTS
+This image builds from Ubuntu's rolling image branch.
 
