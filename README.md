@@ -24,12 +24,12 @@ Instructions
  
  - Build the container, specifying username and password as --build-arg(s) as required. If user/pass combo is not passed, it will be set to the default (master:password):
  
-   `$ sudo docker -t fexofenadine/ubuntu .`
+   `$ sudo docker build -t fexofenadine/ubuntu .`
  
  
  - You can specify username and password as build arguments as required. If user/pass combo is not passed, it will be set to the default (master:password):
  
-   `$ sudo docker --build-arg USERNAME=fexofenadine --build-arg PASSWORD=mypassword -t fexofenadine/ubuntu .`
+   `$ sudo docker build --build-arg USERNAME=fexofenadine --build-arg PASSWORD=mypassword -t fexofenadine/ubuntu .`
   
  
  - Run the container:
