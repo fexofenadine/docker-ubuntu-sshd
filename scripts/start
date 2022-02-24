@@ -5,24 +5,37 @@
 # Authors: Art567, fexofenadine
 # Updated: 21st Feb 2021
 # -----------------------------------------------------------------------------
+USERNAME='%USERNAME%'
+echo username set to $USERNAME at image buildtime
+if [[ $USERNAME == "" ]]; then
+	USERNAME='master'
+fi
+echo username set to $USERNAME at runtime
 
 
 # create/recreate home folder in case of external mount
-mkdir /home/master
-sudo chown master:users /home/master
-
+if test ! -d /home/${USERNAME}; then
+	echo creating ${USERNAME} home folder
+	mkdir /home/${USERNAME}
+fi
+echo setting ownership of /home/${USERNAME} to ${USERNAME}
+chown -R ${USERNAME}:users /home/${USERNAME}
 
 # create new ssh server host keys on first boot
-FILE=/data/.ssh/keys_recreated
-if test -f "$FILE"; then
-    echo "ssh keys previously recreated"
+FILE="/root/host_keys_recreated"
+if test -f $FILE; then
+    echo ssh keys previously recreated
 else
-	echo "ssh keys are defaults, recreating"
+	echo ssh keys are defaults, recreating
 	rm -v /etc/ssh/ssh_host_*
+	dpkg-reconfigure debconf --frontend=noninteractive
 	dpkg-reconfigure openssh-server
-	touch /data/.ssh/keys_recreated
+	touch $FILE
 fi
 
+# run plextraktsync in scrobble mode
+# plextraktsync watch
 
 # Run OpenSSH server in daemon mode
+echo starting sshd daemon
 /usr/sbin/sshd -D

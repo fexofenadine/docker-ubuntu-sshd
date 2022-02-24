@@ -6,58 +6,49 @@
 # Require: Docker (http://www.docker.io/)
 # -----------------------------------------------------------------------------
 
-
 # Base system is the latest rolling version of Ubuntu.
 FROM   ubuntu:rolling
 
-
-# Make sure we don't get notifications we can't answer during building.
-ENV    DEBIAN_FRONTEND noninteractive
-ENV    TZ="Etc/UTC"
-
+# defaults if not specified at build time or runtime
+ARG    USERNAME=master
+ARG    PASSWORD=password
 
 # Prepare scripts and configs
 ADD    ./scripts/start /start
 
+# edit start cmd script hardcode username. nasty.
+RUN    sed -i "s/%USERNAME%/${USERNAME}/g" /start
 
-# Download and install everything from the repos.
-RUN    apt-get -q -y update; apt-get -q -y dist-upgrade && \
-       apt-get -q -y install sudo openssh-server && \
+# Download and install everything from apt repos.
+RUN    dpkg-reconfigure debconf --frontend=noninteractive; \
+       apt-get -q -y update; \
+       apt-get -q -y dist-upgrade && \
+       apt-get -q -y install nano sudo openssh-server && \
        mkdir /var/run/sshd
 
-
 # Set root password
-RUN    echo 'root:password' >> /root/passwdfile
-
+RUN    echo root:${PASSWORD} >> /root/passwdfile
 
 # Create user and its password
-RUN    useradd -m -G sudo master && \
-       echo 'master:password' >> /root/passwdfile
-
+RUN    useradd -m -G sudo ${USERNAME} && \
+       echo ${USERNAME}:${PASSWORD} >> /root/passwdfile
 
 # Apply root password
 RUN    chpasswd -c SHA512 < /root/passwdfile && \
-       rm /root/passwdfile
-
+	   rm /root/passwdfile
 
 # Port 22 is used for ssh
 EXPOSE 22
 
-
-# Assign /data as static volume.
-VOLUME ["/data"]
-
-
-# Fix all permissions
+# Fix startup script permissions
 RUN    chmod +x /start
 
-# Set default shell to bash
-RUN    chsh -s /bin/bash master
+# Set default user's shell to bash
+RUN    chsh -s /bin/bash ${USERNAME}
 
-# clean up apt cache
-RUN    rm -rf /var/lib/apt/lists/*
+# clean up apt cache and revert interactivity to normal
+#RUN    rm -rf /var/lib/apt/lists/*
+#RUN    dpkg-reconfigure debconf --frontend=teletype
 
 # Starting sshd
-CMD    ["/start"]
-
-
+CMD    ["/start ${USERNAME}"]

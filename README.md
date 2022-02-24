@@ -1,7 +1,7 @@
-Ubuntu Rolling with SSH (Docker)
+Ubuntu LTS with SSH (Docker)
 =========
 
-A Docker file to build a [docker.io] base container with Ubuntu Rolling and a sshd service
+A Docker file to build a [docker.io] base container with Ubuntu LTS and a sshd service
 [docker.io]: http://docker.io
 Nice and easy way to get any server up and running using docker
 
@@ -14,7 +14,7 @@ Instructions
  
  - Clone this repository:
  
-   `$ git clone https://github.com/fexofenadine/docker-ubuntu-sshd.git`
+   `$ git clone https://github.com/art567/docker-ubuntu-sshd.git`
  
  
  - Enter local directory:
@@ -27,12 +27,12 @@ Instructions
  
  - Build the container:
  
-   `$ sudo docker build -t fexofenadine/ubuntu-sshd .`
+   `$ sudo docker build -t art567/ubuntu .`
  
  
  - Run the container:
  
-   `$ sudo docker run -d=true --name=ubuntu --restart=always -p=2222:22 -v=/opt/data:/data fexofenadine/ubuntu-sshd /start`
+   `$ sudo docker run -d=true --name=ubuntu --restart=always -p=2222:22 -v=/opt/data:/data art567/ubuntu /start`
  
  
  - Your container will start and bind ssh to 2222 port.
@@ -63,10 +63,10 @@ Versions
 -----------
 Some branches represents Ubuntu versions.
 
-Branch `master` is always represented by latest Ubuntu Rolling
+Branch `master` is always represented by latest Ubuntu LTS
 
    For example:
-   - 12.04 - Ubuntu 12.04 Rolling
-   - 14.04 - Ubuntu 14.04 Rolling
-   - 16.04 - Ubuntu 16.04 Rolling
+   - 12.04 - Ubuntu 12.04 LTS
+   - 14.04 - Ubuntu 14.04 LTS
+   - 16.04 - Ubuntu 16.04 LTS
 
