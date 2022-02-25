@@ -3,7 +3,7 @@
 # docker-ubuntu-sshd /start script
 #
 # Authors: Art567, fexofenadine
-# Updated: 24th Feb 2021
+# Updated: 25th Feb 2021
 # -----------------------------------------------------------------------------
 
 USERNAME='%USERNAME%'
@@ -14,24 +14,36 @@ if test ! -d /home/${USERNAME}; then
 	echo creating ${USERNAME} home folder
 	mkdir /home/${USERNAME}
 fi
-echo setting ownership of /home/${USERNAME} to ${USERNAME}
-chown -R ${USERNAME}:users /home/${USERNAME}
-echo setting 775 perms on /home
-chmod 775 -R /home
 
+# set timezone if not already correct
+CURRENT_TZ=$(cat /etc/timezone)
+if [[ $TZ == $CURRENT_TZ ]]; then
+        echo timezone already set correctly \($TZ\)
+else
+        IFS='/' read -ra TimeZone <<< "$TZ"
+        AREA=${TimeZone[0]}
+        ZONE=${TimeZone[1]}
+        echo tzdata tzdata/Areas select $AREA$'\n'tzdata tzdata/Zones/$AREA select $ZONE > /root/timezonepreseed.txt
+        echo Current system timezone is $CURRENT_TZ, setting new system timezone
+        debconf-set-selections /root/timezonepreseed.txt
+        rm -f /etc/timezone /etc/localtime
+        dpkg-reconfigure --frontend noninteractive tzdata
+        rm /root/timezonepreseed.txt
+fi
 
 # create new ssh server host keys on first boot
-FILE="/root/host_keys_recreated"
+FILE="/home/${USERNAME}/.host_keys_recreated"
 if test -f $FILE; then
     echo ssh keys previously recreated
 else
 	echo ssh keys are defaults, recreating
 	rm -v /etc/ssh/ssh_host_*
-	dpkg-reconfigure debconf --frontend=noninteractive
-	dpkg-reconfigure openssh-server
+	dpkg-reconfigure --frontend noninteractive openssh-server
 	touch $FILE
 fi
-
+# chown home user directory
+echo setting ownership of /home/${USERNAME} to ${USERNAME}
+chown -R ${USERNAME}:users /home/${USERNAME}
 
 # Run OpenSSH server in daemon mode
 echo starting sshd daemon

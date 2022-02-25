@@ -13,8 +13,8 @@ FROM   ubuntu:rolling
 ARG    USERNAME=master
 ARG    PASSWORD=password
 
-# noninteractive apt installs
-ARG DEBIAN_FRONTEND=noninteractive
+# default timezone UTC, can be changed at runtime in start script
+ENV    TZ "Etc/UTC"
 
 # set PATH and include /home/USERNAME/.local/bin
 ENV    PATH "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/${USERNAME}/.local/bin"
@@ -28,8 +28,8 @@ RUN    sed -i "s/%USERNAME%/${USERNAME}/g" /start && \
 
 # Download and install everything from apt repos.
 RUN    apt-get -q -y update && \
-       apt-get -q -y dist-upgrade && \
-       apt-get -q -y install openssh-server sudo && \
+       DEBIAN_FRONTEND=noninteractive apt-get -q -y dist-upgrade && \
+       DEBIAN_FRONTEND=noninteractive apt-get -q -y install nano openssh-server sudo && \
        mkdir /var/run/sshd
 
 # Set root password
@@ -53,7 +53,7 @@ RUN    chmod +x /start
 RUN    chsh -s /bin/bash ${USERNAME}
 
 # clean up apt cache
-#RUN    rm -rf /var/lib/apt/lists/*
+RUN    rm -rf /var/lib/apt/lists/*
 
 # Starting sshd
 CMD    ["/start"]

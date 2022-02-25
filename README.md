@@ -34,7 +34,7 @@ Instructions
  
  - Run the container:
  
-   `$ sudo docker run -d=true --name=ubuntu --restart=always -p=2222:22 fexofenadine/ubuntu /start`
+   `$ sudo docker run -d=true --name=ubuntu --restart=always -e TZ="Europe/Paris" -p=2222:22 fexofenadine/ubuntu /start`
  
  
  - Consider binding your /home directory as a volume for persistent user customizations
